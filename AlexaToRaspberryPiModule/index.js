@@ -21,6 +21,7 @@ const SendCommandHandler = {
             region: 'us-west-2'});
 
         raspberrypi.publish('group1/topic1', JSON.stringify({'msg':'Test Message'}));
+        raspberrypi.end((err) => {});
     } 
 };
 
