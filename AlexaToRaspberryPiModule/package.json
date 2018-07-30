@@ -1,0 +1,15 @@
+{
+  "name": "alexatoraspberrypimodule",
+  "version": "1.0.0",
+  "description": "Alexa lamda to connect, send and receive messages from raspberrypi",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "author": "Shyamal Shukla",
+  "license": "ISC",
+  "dependencies": {
+    "ask-sdk": "^2.0.7",
+    "aws-iot-device-sdk": "^2.2.1"
+  }
+}
