@@ -24,4 +24,4 @@ const SendCommandHandler = {
     } 
 };
 
-exports.handler = skillBuilder.addRequestHandlers(SendCommandHandle).addErrorHandlers().lambda();
+exports.handler = skillBuilder.addRequestHandlers(SendCommandHandler).addErrorHandlers().lambda();
