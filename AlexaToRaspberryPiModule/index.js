@@ -16,7 +16,7 @@ const SendCommandHandler = {
             keyPath:'./Security/25fdb6c9be-private.pem.key',
             certPath: './Security/25fdb6c9be-certificate.pem.crt',
             caPath: './Security/VeriSign-Class 3-Public-Primary-Certification-Authority-G5.pem',
-            clientId: '',
+            clientId: 'Alexa',
             host: 'a81921ysfgj30.iot.us-west-2.amazonaws.com',
             region: 'us-west-2'});
 
