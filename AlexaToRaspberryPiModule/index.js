@@ -1,7 +1,7 @@
 process.env['PATH'] = process.env['PATH'] + ':' + process.env['LAMBDA_TASK_ROOT'];
 
 const ask = require('ask-sdk');
-const iot = require('aws-iot-device-sdk');
+const aws = require('aws-sdk');
 
 const skillBuilder = ask.SkillBuilders.standard();
 
@@ -12,17 +12,41 @@ const SendCommandHandler = {
             || (request.type === 'IntentRequest' && request.intent.name === 'SendCommand'); 
     },
     handle(handlerInput) {
-        const raspberrypi = iot.device({
-            keyPath:'./Security/25fdb6c9be-private.pem.key',
-            certPath: './Security/25fdb6c9be-certificate.pem.crt',
-            caPath: './Security/VeriSign-Class 3-Public-Primary-Certification-Authority-G5.pem',
-            clientId: 'Alexa',
-            host: 'a81921ysfgj30.iot.us-west-2.amazonaws.com',
-            region: 'us-west-2'});
+        const host = 'a81921ysfgj30.iot.us-west-2.amazonaws.com';
+        const iotdata = new aws.IotData({ endpoint : host });
 
-        raspberrypi.publish('group1/topic1', JSON.stringify({'msg':'Test Message'}));
-        raspberrypi.end((err) => {});
+        if (iotdata === null)
+        {
+            console.log("iotdata found null");
+        }
+        else {
+            var params = {
+                topic : 'group1/topic1',
+                payload : 'Message From Alexa',
+                qos : 0
+            };
+
+            iotdata.publish(params, (err, data) => {
+                if (err) {
+                    console.log("Error occured : ", err);
+                }
+                else {
+                    console.log("Success..");
+                }
+            });
+        }
+        return handlerInput.responseBuilder.speak("Message has been sent").withSimpleCard("Raspberry Pi Broker", "Message has been sent to raspberry pi").getResponse(); 
     } 
 };
 
-exports.handler = skillBuilder.addRequestHandlers(SendCommandHandler).addErrorHandlers().lambda();
+const SessionEndedRequestHandler = {
+    canHandle(handlerInput) {
+        const request = handlerInput.requestEnvelope.request;
+        return request.type === 'SessionEndedRequest';
+    },
+    handle(handlerInput) {
+        console.log(`Session ended with reason : ${handlerInput.requestEnvelope.request.reason}`);
+        return handlerInput.responseBuilder.getResponse(); 
+    }
+};
+exports.handler = skillBuilder.addRequestHandlers(SendCommandHandler, SessionEndedRequestHandler).addErrorHandlers().lambda();
